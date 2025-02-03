@@ -21,7 +21,10 @@ function Item({
   return (
     <div className="flex items-center border-b border-blue-400 gap-8 px-2 py-2 justify-between">
       <p>
-        <span className="inline-block" style={{ width: 80 }}>{format(new Date(recorded_at), "dd/MM/yy")}</span> 📕 {title}{" "}
+        <span className="inline-block" style={{ width: 80 }}>
+          {format(new Date(recorded_at), "dd/MM/yy")}
+        </span>{" "}
+        📕 {title}{" "}
       </p>
       <div className="inline-flex gap-2">
         <a href={url} className="underline text-blue-700" target="_blank">
@@ -49,6 +52,15 @@ async function getTaliim(client: SupabaseClient, slug: string) {
   return row.data;
 }
 
+interface PageMeta {
+  title: string;
+  description: string;
+  openGraph?: {
+    title: string;
+    images: string[];
+  };
+}
+
 async function getMeta(
   client: SupabaseClient,
   {
@@ -58,11 +70,11 @@ async function getMeta(
     taliim_slug: string;
     tasjilat_slug?: string;
   }
-) {
+): Promise<PageMeta> {
   const query = client
     .from("taliims")
     .select(
-      `kitab_title, slug, ustadhs(name), tasjilaats(title, slug, meta_description)`
+      `kitab_title, slug, cover_img_url, ustadhs(name), tasjilaats(title, slug, meta_description)`
     )
     .eq("slug", taliim_slug);
   if (tasjilat_slug) {
@@ -73,18 +85,28 @@ async function getMeta(
   if (!row.data)
     return {
       title: "Not found",
-      desciption: "Kajian / cRekaman tidak ditemukan",
+      description: "Kajian / cRekaman tidak ditemukan",
     };
   let title = row.data.kitab_title;
   const tasjil =
     row.data.tasjilaats?.length === 1 ? row.data.tasjilaats[0] : null;
   if (tasjil) title = `${tasjil.title} ${title}`;
+  title = `${title} - ${row.data.ustadhs.name}`;
+  const description =
+    tasjil?.meta_description ?? `Rekaman audio kajian ${row.data.ustadhs.name}`;
+  const og = row.data.cover_img_url
+    ? {
+        openGraph: {
+          images: [row.data.cover_img_url],
+          title,
+        },
+      }
+    : {};
 
   return {
-    title: `${title} - ${row.data.ustadhs.name}`,
-    description:
-      tasjil?.meta_description ??
-      `Rekaman audio kajian ${row.data.ustadhs.name}`,
+    title,
+    description,
+    ...og,
   };
 }
 
@@ -100,7 +122,7 @@ export async function generateMetadata({
   const tasjilSlug = (await searchParams).tasjilat;
   const client = await createClient();
 
-  const { title, description } = await getMeta(client, {
+  const { title, description, openGraph } = await getMeta(client, {
     taliim_slug: slug,
     tasjilat_slug: tasjilSlug,
   });
@@ -108,6 +130,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    openGraph,
   };
 }
 
@@ -139,7 +162,9 @@ export default async function TaliimDetail({
       <main className="flex flex-col gap-8 row-start-2 sm:items-start">
         <div>
           <h1 className="text-lg font-bold">
-            <Link href="/" className="underline text-blue-500">{taliim?.kitab_title}</Link>
+            <Link href="/" className="underline text-blue-500">
+              {taliim?.kitab_title}
+            </Link>
           </h1>
           <div>{taliim?.kitab_title_ar}</div>
           <div>{taliim?.ustadhs.name} حفظه الله</div>
