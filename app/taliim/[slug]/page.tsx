@@ -21,7 +21,7 @@ function Item({
   return (
     <div className="flex items-center border-b border-blue-400 gap-8 px-2 py-2 justify-between">
       <p>
-        {format(new Date(recorded_at), "dd/MM/yy")} - {title}{" "}
+        <span className="inline-block" style={{ width: 80 }}>{format(new Date(recorded_at), "dd/MM/yy")}</span> 📕 {title}{" "}
       </p>
       <div className="inline-flex gap-2">
         <a href={url} className="underline text-blue-700" target="_blank">
@@ -61,20 +61,31 @@ async function getMeta(
 ) {
   const query = client
     .from("taliims")
-    .select(`kitab_title, slug, ustadhs(name), tasjilaats(title, slug)`)
+    .select(
+      `kitab_title, slug, ustadhs(name), tasjilaats(title, slug, meta_description)`
+    )
     .eq("slug", taliim_slug);
   if (tasjilat_slug) {
     query.eq("tasjilaats.slug", tasjilat_slug);
   }
   const row = await query.maybeSingle();
 
-  if (!row.data) return "Not found";
+  if (!row.data)
+    return {
+      title: "Not found",
+      desciption: "Kajian / cRekaman tidak ditemukan",
+    };
   let title = row.data.kitab_title;
   const tasjil =
-    row.data.tasjilaats?.length === 1 ? row.data.tasjilaats[0].title : "";
-  if (tasjil) title = `${tasjil} ${title}`;
+    row.data.tasjilaats?.length === 1 ? row.data.tasjilaats[0] : null;
+  if (tasjil) title = `${tasjil.title} ${title}`;
 
-  return `${title} - ${row.data.ustadhs.name}`;
+  return {
+    title: `${title} - ${row.data.ustadhs.name}`,
+    description:
+      tasjil?.meta_description ??
+      `Rekaman audio kajian ${row.data.ustadhs.name}`,
+  };
 }
 
 export async function generateMetadata({
@@ -89,13 +100,14 @@ export async function generateMetadata({
   const tasjilSlug = (await searchParams).tasjilat;
   const client = await createClient();
 
-  const title = await getMeta(client, {
+  const { title, description } = await getMeta(client, {
     taliim_slug: slug,
     tasjilat_slug: tasjilSlug,
   });
 
   return {
     title,
+    description,
   };
 }
 
@@ -123,10 +135,12 @@ export default async function TaliimDetail({
   }));
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-2 sm:items-start">
         <div>
-          <h1 className="text-lg font-bold">{taliim?.kitab_title}</h1>
+          <h1 className="text-lg font-bold">
+            <Link href="/" className="underline text-blue-500">{taliim?.kitab_title}</Link>
+          </h1>
           <div>{taliim?.kitab_title_ar}</div>
           <div>{taliim?.ustadhs.name} حفظه الله</div>
         </div>

@@ -58,6 +58,7 @@ export type Database = {
           audio_url: string
           created_at: string
           id: number
+          meta_description: string
           recorded_at: string
           slug: string
           taliim_id: number
@@ -67,6 +68,7 @@ export type Database = {
           audio_url: string
           created_at?: string
           id?: number
+          meta_description?: string
           recorded_at: string
           slug: string
           taliim_id: number
@@ -76,6 +78,7 @@ export type Database = {
           audio_url?: string
           created_at?: string
           id?: number
+          meta_description?: string
           recorded_at?: string
           slug?: string
           taliim_id?: number

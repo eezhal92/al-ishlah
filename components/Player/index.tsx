@@ -30,7 +30,7 @@ export default function Player({
   if (!entry) return null;
 
   return (
-    <div className="z-10 fixed bottom-0 left-0 right-0 text-white bg-black shadow-sm border-t py-4">
+    <div className="z-10 fixed bottom-0 left-0 right-0 dark:text-black dark:bg-white text-white bg-black shadow-sm border-t py-4">
       <div className="flex flex-col items-center">
         <div>
           <audio autoPlay ref={ref} controls src={entry.url}></audio>
