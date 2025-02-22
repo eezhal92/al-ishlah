@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      shorts: {
+        Row: {
+          audio_url: string
+          captions_vtt: string
+          created_at: string
+          id: number
+          slug: string
+          speaker_name: string
+          title: string
+        }
+        Insert: {
+          audio_url: string
+          captions_vtt: string
+          created_at?: string
+          id?: number
+          slug: string
+          speaker_name: string
+          title: string
+        }
+        Update: {
+          audio_url?: string
+          captions_vtt?: string
+          created_at?: string
+          id?: number
+          slug?: string
+          speaker_name?: string
+          title?: string
+        }
+        Relationships: []
+      }
       taliims: {
         Row: {
           author: string | null
@@ -60,6 +90,7 @@ export type Database = {
         Row: {
           audio_url: string
           created_at: string
+          credit: string | null
           id: number
           meta_description: string
           recorded_at: string
@@ -70,6 +101,7 @@ export type Database = {
         Insert: {
           audio_url: string
           created_at?: string
+          credit?: string | null
           id?: number
           meta_description?: string
           recorded_at: string
@@ -80,6 +112,7 @@ export type Database = {
         Update: {
           audio_url?: string
           created_at?: string
+          credit?: string | null
           id?: number
           meta_description?: string
           recorded_at?: string
