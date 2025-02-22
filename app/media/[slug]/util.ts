@@ -9,13 +9,12 @@ export async function getMediaEntry(client: SupabaseClient, slug: string): Promi
 
   if (!row.data) return null
 
-  const captions = parseVTT(row.data.captions_vtt)
-
   return {
     speakerName: row.data.speaker_name,
     title: row.data.title,
     audioURL: row.data.audio_url,
-    captions: captions,
+    captions: parseVTT(row.data.captions_vtt),
+    captionsAr: row.data.captions_ar_vtt ? parseVTT(row.data.captions_ar_vtt) : null,
   }
 }
 

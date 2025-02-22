@@ -15,4 +15,8 @@ export type ShortMedia = {
   speakerName: string
   audioURL: string
   captions: Caption[]
+  /**
+   * Arabic captions
+   */
+  captionsAr?: Caption[] | null
 }

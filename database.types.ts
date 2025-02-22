@@ -12,6 +12,7 @@ export type Database = {
       shorts: {
         Row: {
           audio_url: string
+          captions_ar_vtt: string | null
           captions_vtt: string
           created_at: string
           id: number
@@ -21,6 +22,7 @@ export type Database = {
         }
         Insert: {
           audio_url: string
+          captions_ar_vtt?: string | null
           captions_vtt: string
           created_at?: string
           id?: number
@@ -30,6 +32,7 @@ export type Database = {
         }
         Update: {
           audio_url?: string
+          captions_ar_vtt?: string | null
           captions_vtt?: string
           created_at?: string
           id?: number

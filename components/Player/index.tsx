@@ -7,6 +7,7 @@ export type PlayerEntry = {
   slug: string;
   title: string;
   ustadh: string;
+  recordedAt: string;
 };
 
 export default function Player({

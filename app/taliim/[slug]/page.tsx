@@ -150,12 +150,20 @@ export default async function TaliimDetail({
 
   if (!taliim) return <p>Tidak ditemukan</p>;
 
-  const entries: PlayerEntry[] = taliim?.tasjilaats.map((t) => ({
-    url: t.audio_url,
-    slug: t.slug,
-    ustadh: taliim.ustadhs.name!,
-    title: t.title,
-  }));
+  const entries: PlayerEntry[] = taliim.tasjilaats
+    .slice()
+    .sort((a, b) => {
+      return (
+        new Date(a.recorded_at).getTime() - new Date(b.recorded_at).getTime()
+      );
+    })
+    .map((t) => ({
+      url: t.audio_url,
+      slug: t.slug,
+      ustadh: taliim.ustadhs.name!,
+      title: t.title,
+      recordedAt: t.recorded_at,
+    }));
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -171,14 +179,14 @@ export default async function TaliimDetail({
         </div>
         <div>
           {taliim?.tasjilaats.length === 0 && <div>--Belum ada rekaman--</div>}
-          {taliim?.tasjilaats.map((tasjil) => (
+          {entries.map((tasjil, idx) => (
             <Item
-              key={tasjil.id}
+              key={idx}
               title={tasjil.title}
-              url={tasjil.audio_url}
+              url={tasjil.url}
               taliimSlug={taliim.slug}
               slug={tasjil.slug}
-              recorded_at={tasjil.recorded_at}
+              recorded_at={tasjil.recordedAt}
             />
           ))}
         </div>
