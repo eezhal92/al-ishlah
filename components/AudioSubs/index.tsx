@@ -1,10 +1,11 @@
 "use client";
 
-import { ReactEventHandler, useCallback, useState } from "react";
+import { ReactEventHandler, useCallback, useEffect, useRef, useState } from "react";
 import { AudioSubsProps } from "./AudioSubs.types";
 import { getSubtitleBinarySearch } from "./util";
 
-export default function AudioSubs({ media }: AudioSubsProps) {
+export default function AudioSubs({ media, start }: AudioSubsProps) {
+  const audioRef = useRef<HTMLAudioElement>(null)
   const [text, setText] = useState("");
 
   const updateSubtitle: ReactEventHandler<HTMLAudioElement> = useCallback(
@@ -16,6 +17,13 @@ export default function AudioSubs({ media }: AudioSubsProps) {
     },
     [media.captions]
   );
+
+  useEffect(() => {
+    if (audioRef.current && start) {
+      console.log(start)
+      audioRef.current.currentTime = start;
+    }
+  }, [start]);
 
   return (
     <div className="flex justify-center px-4 md:px-0">
@@ -31,6 +39,7 @@ export default function AudioSubs({ media }: AudioSubsProps) {
         </div>
         <div className="text-center">
           <audio
+            ref={audioRef}
             className="w-full max-w-2xl"
             onTimeUpdate={updateSubtitle}
             controls
