@@ -1,10 +1,10 @@
-import { SubtitleEntry } from "./AudioSubs.types";
+import { Caption } from "@/types/short";
 
-export function getSubtitleBinarySearch(currentTime: number, subtitles: SubtitleEntry[]) {
-  let left = 0, right = subtitles.length - 1;
+export function getSubtitleBinarySearch(currentTime: number, captions: Caption[]) {
+  let left = 0, right = captions.length - 1;
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
-    const subtitle = subtitles[mid];
+    const subtitle = captions[mid];
 
     if (currentTime >= subtitle.startTime && currentTime <= subtitle.endTime) {
       return subtitle.text;
