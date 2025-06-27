@@ -15,6 +15,7 @@ export async function getMediaEntry(client: SupabaseClient, slug: string): Promi
     title: row.data.title,
     audioURL: row.data.audio_url,
     captions: parseVTT(row.data.captions_vtt),
+    credit: row.data.credit,
     captionsAr: row.data.captions_ar_vtt ? parseVTT(row.data.captions_ar_vtt) : null,
   }
 }

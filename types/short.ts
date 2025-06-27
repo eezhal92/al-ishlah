@@ -20,4 +20,5 @@ export type ContentMedia = {
    * Arabic captions
    */
   captionsAr?: Caption[] | null
+  credit?: string | null
 }

@@ -15,6 +15,7 @@ export type Database = {
           captions_ar_vtt: string | null
           captions_vtt: string
           created_at: string
+          credit: string | null
           id: number
           slug: string
           speaker_name: string
@@ -25,6 +26,7 @@ export type Database = {
           captions_ar_vtt?: string | null
           captions_vtt: string
           created_at?: string
+          credit?: string | null
           id?: number
           slug: string
           speaker_name: string
@@ -35,6 +37,7 @@ export type Database = {
           captions_ar_vtt?: string | null
           captions_vtt?: string
           created_at?: string
+          credit?: string | null
           id?: number
           slug?: string
           speaker_name?: string
