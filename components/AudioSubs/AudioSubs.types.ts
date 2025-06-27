@@ -1,7 +1,7 @@
-import { ShortMedia } from "@/types/short";
+import { ContentMedia } from "@/types/short";
 
 export interface AudioSubsProps {
-  media: ShortMedia
+  media: ContentMedia
   /**
    * In seconds
    */

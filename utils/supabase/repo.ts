@@ -56,6 +56,11 @@ export class TasjiilRepo {
     if (error) {
       return Promise.reject(new Error(error.message))
     }
+
+    return {
+      publicURL: upload.publicURL,
+      path: `/taliim/${taliim.data.slug}?tasjilat=${tasjiilSlug}`
+    }
   }
 
   /**

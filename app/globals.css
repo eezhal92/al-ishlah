@@ -19,3 +19,26 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Plyr Js */
+
+.plyr--video {
+   /*.remove me for full video */
+  height: 52px;
+}
+
+.plyr--video .plyr__controls {
+  background: black !important;
+}
+
+.show-video .plyr--video {
+  height: auto;
+}
+
+.show-video .plyr--video .plyr__controls{
+  background: transparent !important;
+}
+
+.plyr__controls .plyr__controls__item:first-child {
+  background-color: #6bd3ff;
+}

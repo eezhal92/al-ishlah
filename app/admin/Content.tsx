@@ -1,6 +1,7 @@
 'use client'
 import { TasjiilRepo } from "@/utils/supabase/repo";
 import { createClient } from "@/utils/supabase/server";
+import { useRouter } from "next/navigation";
 import { useState } from "react"
 
 type AddTasjilDTO = {
@@ -13,6 +14,7 @@ type AddTasjilDTO = {
 const client = createClient()
 
 export function AdminForm() {
+  const router = useRouter()
   const [form, setForm] = useState<AddTasjilDTO>({
     taalimId: 1,
     title: "",
@@ -46,12 +48,13 @@ export function AdminForm() {
     const repo = new TasjiilRepo(client)
     if (!form.file) return
     setCreating(true)
-    await repo.addTasjiil({
+    const res = await repo.addTasjiil({
       ...form,
       file: form.file!
     })
     setCreating(false)
     alert('Uploaded!')
+    router.push(res.path)
   };
 
   return (

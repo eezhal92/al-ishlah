@@ -1,5 +1,7 @@
 "use client";
-
+/**
+ * Tasjilat Playr
+ */
 import { useEffect, useRef, useState } from "react";
 
 export type PlayerEntry = {

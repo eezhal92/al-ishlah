@@ -1,7 +1,7 @@
-import { Caption, ShortMedia } from "@/types/short";
+import { Caption, ContentMedia } from "@/types/short";
 import { SupabaseClient } from "@/utils/supabase/server";
 
-export async function getMediaEntry(client: SupabaseClient, slug: string): Promise<ShortMedia | null> {
+export async function getMediaEntry(client: SupabaseClient, slug: string): Promise<ContentMedia | null> {
   const row = await client.from('shorts')
     .select('*')
     .eq('slug', slug)
@@ -11,12 +11,27 @@ export async function getMediaEntry(client: SupabaseClient, slug: string): Promi
 
   return {
     speakerName: row.data.speaker_name,
+    youtubeID: getYoutubeID(row.data.audio_url),
     title: row.data.title,
     audioURL: row.data.audio_url,
     captions: parseVTT(row.data.captions_vtt),
     captionsAr: row.data.captions_ar_vtt ? parseVTT(row.data.captions_ar_vtt) : null,
   }
 }
+
+// Taken from stackoverflow
+export function getYoutubeID(url: string) : string | null {
+  if (!url.includes('youtube.com')) return null
+  let ID = '';
+  const urls = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+  if (urls[2] !== undefined) {
+    ID = urls[2].split(/[^0-9a-z_\-]/i)[0];
+  } else {
+    ID = url;
+  }
+  return ID;
+}
+
 
 export function parseVTT(vttText: string) {
   const captions: Caption[] = [];

@@ -10,8 +10,9 @@ export type Caption = {
   endTime: number
 }
 
-export type ShortMedia = {
+export type ContentMedia = {
   title: string
+  youtubeID: string | null
   speakerName: string
   audioURL: string
   captions: Caption[]

@@ -1,5 +1,6 @@
 import AudioSubs from "@/components/AudioSubs";
-import { getMediaEntry } from "./util";
+import YoutubePlayer from "@/components/YoutubePlayer";
+import { getMediaEntry } from "@/utils/media";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
 
@@ -41,6 +42,15 @@ export default async function Vids ({ params, searchParams }: VidsProps) {
   const media = await getMediaEntry(client, slug)
 
   if (!media) return <div>404</div>
+
+  if (media.youtubeID) {
+    return (
+      <div>
+        <YoutubePlayer media={media} videoID={media.youtubeID} />
+      </div>
+    )
+
+  }
 
   return (
     <AudioSubs media={media} start={startTime} />
